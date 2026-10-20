@@ -8,10 +8,10 @@ function setup(){
   const element={clientHeight:600,focus(){},setPointerCapture(){},addEventListener(type,fn){handlers.set(type,fn);}};
   const camera=new THREE.OrthographicCamera(-2,2,2,-2,.001,100);
   camera.position.set(2,2,3);camera.lookAt(0,0,0);
-  let picks=0,changed=0,menus=0;
-  const controls=new CadNavigation(camera,element,()=>changed++,()=>picks++,()=>menus++);
+  let picks=0,changed=0,menus=0,starts=0;
+  const controls=new CadNavigation(camera,element,()=>changed++,()=>picks++,()=>menus++,()=>starts++);
   function send(type,overrides={}){handlers.get(type)({pointerId:1,clientX:100,clientY:100,button:0,buttons:0,deltaMode:0,pointerType:'mouse',ctrlKey:false,shiftKey:false,preventDefault(){},...overrides});}
-  return {camera,controls,send,picks:()=>picks,changed:()=>changed,menus:()=>menus};
+  return {camera,controls,send,picks:()=>picks,changed:()=>changed,menus:()=>menus,starts:()=>starts};
 }
 
 test('default left drag rotates around the target without changing distance or selecting',()=>{
@@ -65,4 +65,11 @@ test('explicit pan tool keeps left drag available for trackpad users',()=>{
   const t=setup();t.controls.mode='pan';const orientation=t.camera.quaternion.clone();
   t.send('pointerdown');t.send('pointermove',{clientX:160});t.send('pointerup',{clientX:160});
   assert.ok(t.controls.target.length()>0);assert.ok(t.camera.quaternion.angleTo(orientation)<1e-7);assert.equal(t.picks(),0);
+});
+
+test('pointer press and wheel take control before the camera moves',()=>{
+  const t=setup();
+  t.send('pointerdown');assert.equal(t.starts(),1);assert.equal(t.changed(),0);
+  t.send('pointerup');t.send('wheel',{deltaY:100});assert.equal(t.starts(),2);
+  t.send('pointerdown',{pointerType:'touch'});assert.equal(t.starts(),3);
 });

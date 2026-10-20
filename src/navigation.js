@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 // Bambu Studio mouse bindings, with camera-relative rotation for assembly viewing.
 export class CadNavigation{
-  constructor(camera,element,onChange,onPick,onMenu){
+  constructor(camera,element,onChange,onPick,onMenu,onStart=()=>{}){
     this.camera=camera;this.element=element;this.onChange=onChange;this.onPick=onPick;this.onMenu=onMenu;
+    this.onStart=onStart;
     this.target=new THREE.Vector3();this.mode='select';this.pointers=new Map();this.drag=null;this.reverseWheel=false;
     element.addEventListener('pointerdown',e=>this.down(e));
     element.addEventListener('pointermove',e=>this.move(e));
@@ -14,6 +15,7 @@ export class CadNavigation{
   setCamera(c){this.camera=c;}
   span(){return this.camera.isOrthographicCamera?(this.camera.top-this.camera.bottom)/this.camera.zoom:2*this.camera.position.distanceTo(this.target)*Math.tan(THREE.MathUtils.degToRad(this.camera.fov/2));}
   down(e){
+    this.onStart();
     e.preventDefault();this.element.focus();this.element.setPointerCapture(e.pointerId);
     this.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
     if(this.pointers.size===2){this.drag=null;return;}
@@ -45,6 +47,7 @@ export class CadNavigation{
   wheel(e){
     e.preventDefault();
     if(this.drag?.button===1||(e.buttons&4))return;
+    this.onStart();
     const unit=e.deltaMode===1?16:e.deltaMode===2?this.element.clientHeight:1;
     const dx=(e.deltaX||0)*unit,dy=e.deltaY*unit;
     if(e.shiftKey){this.pan(-dx*.2,-dy*.2);return;}
