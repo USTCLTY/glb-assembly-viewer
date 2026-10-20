@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.npm-cache/
+.openai/
+.env
+.env.*
+*.log
+*.glb
+*.gltf
+public/models/
