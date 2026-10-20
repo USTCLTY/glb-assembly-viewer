@@ -4,8 +4,10 @@
 
 ## 使用
 
-打开 GitHub Pages 网页，点击「打开模型」选择当前设备上的 GLB，也可以拖入文件。
-仓库与网页均不内置私人模型。选择的模型仅在当前浏览器内解析，不会上传、保存到服务器或同步到其他设备。
+打开 [在线查看器](https://ustclty.github.io/glb-assembly-viewer/)，会自动加载「000舵轮总装.glb」（约 6.24 MB）。
+默认舵轮装配体已随公开仓库和网页发布，访问者可以查看或下载。
+点击「打开模型」或拖入文件，可以临时切换到当前设备上的其他 GLB。
+自行选择的文件仅在当前浏览器内解析，不会上传或同步；刷新网页会重新打开默认舵轮装配体。
 
 | 操作 | 输入 |
 | --- | --- |
@@ -46,6 +48,7 @@ npm run build:pages
 - `src/navigation.js`：鼠标与触屏导航
 - `src/lighting.js`、`src/material-look.js`：灯光与材质
 - `public/draco`、`public/basis`：本地压缩解码器
+- `public/models/steering-assembly.glb`：默认舵轮装配体，构建时复制到 `docs/models/`
 - `tests/`：导航和材质恢复测试
 - `docs/`：GitHub Pages 发布文件
 

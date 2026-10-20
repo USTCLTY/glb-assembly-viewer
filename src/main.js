@@ -394,9 +394,10 @@ renderer.domElement.addEventListener('dblclick',e=>{if(e.button===0&&!measureEna
 renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();busy(true,'图形设备连接中断','请刷新页面以重新初始化渲染器。');});
 window.addEventListener('beforeunload',()=>{draco.dispose();ktx2.dispose();disposeEmbeddedAssets();lighting.dispose();renderer.dispose();});
 const initialModel=embeddedModel();
-const defaultModelUrl=import.meta.env.VITE_DEFAULT_MODEL||'';
+const defaultModelUrl=import.meta.env.VITE_DEFAULT_MODEL||'models/steering-assembly.glb';
+const defaultModelName=defaultModelUrl==='models/steering-assembly.glb'?'000舵轮总装.glb':decodeURIComponent(defaultModelUrl.split('/').pop());
 if(initialModel)loadModel(initialModel.buffer,{name:initialModel.name});
-else if(defaultModelUrl)loadModel(`${import.meta.env.BASE_URL}${defaultModelUrl}`,{name:decodeURIComponent(defaultModelUrl.split('/').pop())});
+else if(defaultModelUrl)loadModel(`${import.meta.env.BASE_URL}${defaultModelUrl}`,{name:defaultModelName});
 else {
   busy(true,'打开你的 GLB 装配体','选择当前设备上的 GLB，或拖入模型。文件仅在浏览器内解析，不会上传。');
   $('progress').parentElement.hidden=true;$('load-retry').hidden=false;$('load-retry').textContent='打开模型';

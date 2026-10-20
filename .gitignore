@@ -7,4 +7,6 @@ dist/
 *.log
 *.glb
 *.gltf
-public/models/
+public/models/*
+!public/models/steering-assembly.glb
+!docs/models/steering-assembly.glb
